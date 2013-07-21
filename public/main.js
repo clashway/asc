@@ -21,4 +21,8 @@ $(document).ready(function() {
         event.preventDefault();
         socket.emit('vote', { story_title : $(this).attr('rel') });
     });
+
+    $(".story-title").live('click', function(event) {
+        $(this).siblings("p").toggle("slow");
+    });
 });

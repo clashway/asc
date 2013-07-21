@@ -1,9 +1,11 @@
 var http    = require('http'),
     io      = require('socket.io'),
     qs      = require('querystring'),
+    template = require('swig'),
     express = require('express');
 
 var port = 8111;
+var story_list_loc = __dirname + '/public/views/story_list.html';
 
 // Initialize the db
 var dburl = 'localhost/asc';
@@ -20,12 +22,13 @@ var socket = io.listen(http.createServer(app).listen(port));
 console.log('Connected at: 127.0.0.1:' + port);
 
 // Define the Story object
-function story(description, tshirt, vote) {
-    this.description = description;
+function story(title, user_story, tshirt, vote) {
+    this.title = title;
+    this.user_story = user_story;
     this.tshirt = tshirt;
     this.vote = vote;
 }
-db.stories.ensureIndex( { "description" : 1 }, {unique : true} );
+db.stories.ensureIndex( { "title" : 1 }, {unique : true} );
 
 socket.sockets.on('connection', function(client) {
     // On connection show the user all the current stories
@@ -36,7 +39,7 @@ socket.sockets.on('connection', function(client) {
     client.on('new story', function(data) {
         // Submit the new story to the db
         var parsed = qs.parse(data.story);
-        var new_story = new story(parsed.description, parsed.tshirt, 0);
+        var new_story = new story(parsed.title, parsed.user_story, parsed.tshirt, 0);
         db.stories.save(new_story, function (err, success) {
             getAllStories(function(stories) {
                 client.emit('story list', { stories: stories });
@@ -46,7 +49,7 @@ socket.sockets.on('connection', function(client) {
      });
 
     client.on('vote', function(data) {
-        var query = {description: data.story_title};
+        var query = {title: data.story_title};
         db.stories.find(query, function(err, stories) {
             stories.forEach( function(voted_story) {
                 voted_story.vote++;
@@ -67,13 +70,11 @@ function getAllStories(successCallback) {
         if (err || !stories) {
             console.log("No stories found");
         } else {
-            var storyTitles = '';
-            stories.forEach( function(story) {
-                storyTitles += '<li>';
-                storyTitles += story.description + ' &nbsp <a rel="' + story.description + '" href="#">Vote</a>';
-                storyTitles += '</li>';
+            var tmpl = template.compileFile(story_list_loc);
+            renderedHtml = tmpl.render({
+                stories : stories
             });
-            successCallback(storyTitles);
+            successCallback(renderedHtml);
         }
     });
 };

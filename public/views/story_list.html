@@ -1,0 +1,11 @@
+{% for story in stories -%}
+    <li id="{{ story.title }}">
+        <div class="story-title">
+            <strong>{{ story.title }}</strong> - <a rel="{{ story.title }}" href="#">Vote!</a> {{ story.vote }}
+        </div>
+        <p></p>
+        <p style="display:none;">
+            {{ story.user_story }}
+        </p>
+    </li>
+{%- endfor %}
