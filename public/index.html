@@ -1,0 +1,23 @@
+<html>
+  <head>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/main.js"></script>
+  </head>
+  <body>
+    <h1>Agile Story Catalog</h1>
+
+    <pre id="status"></pre>
+
+    <form id="story-form" action="/formInput" method="get">
+        Description: <input type="text" name="description" /> <br>
+        T-Shirt Size: <input type="text" name="tshirt" /> <br>
+        <input type="submit" />
+    </form>
+
+    <div id="stories">
+        <h2>Current Stories</h2>
+        <ul id="story-list"></ul>
+    </div>
+  </body>
+</html>
