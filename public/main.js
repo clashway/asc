@@ -6,8 +6,11 @@ socket.on('connect', function() {
 socket.on('disconnect', function() {
     $('#status').text('Disconnected');
 });
-socket.on('story list', function(data) {
-    $('#story-list').html(data.stories);
+socket.on('backlog list', function(data) {
+    $('#backlog-list').html(data.stories);
+});
+socket.on('selected list', function(data) {
+    $('#selected-list').html(data.stories);
 });
 
 $(document).ready(function() {
@@ -17,8 +20,11 @@ $(document).ready(function() {
         socket.emit('new story', { story : $('#story-form').serialize() });
     });
 
-    $("#story-list a").live('click', function(event) {
-        event.preventDefault();
+    $("#select-button").live('click', function(event) {
+        socket.emit('selected', { story_title : $(this).attr('rel') });
+    });
+
+    $("#vote-button").live('click', function(event) {
         socket.emit('vote', { story_title : $(this).attr('rel') });
     });
 

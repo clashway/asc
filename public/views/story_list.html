@@ -1,7 +1,13 @@
 {% for story in stories -%}
-    <li id="{{ story.title }}">
+    <li>
+        {% if !story.chosen.selected %}
+            <button id="select-button" rel="{{ story.title }}">Select this one</button>
+        {% endif %}
         <div class="story-title">
-            <strong>{{ story.title }}</strong> - <a rel="{{ story.title }}" href="#">Vote!</a> {{ story.vote }}
+            <strong>{{ story.title }}</strong>
+            {% if !story.chosen.selected %}
+                - <button id="vote-button" rel="{{ story.title }}">Vote {{ story.vote }}</button>
+            {% endif %}
         </div>
         <p></p>
         <p style="display:none;">
