@@ -2,7 +2,7 @@ var http     = require('http'),
     io       = require('socket.io'),
     qs       = require('querystring'),
     template = require('swig'),
-    story    = require('./story.js'),
+    story    = require('./includes/story.js'),
     express  = require('express');
 
 var port = 8111;
